@@ -1,0 +1,49 @@
+Make sure PostgreSQL is running locally (update `application.properties` accordingly).
+
+## ☁️ Deploy to AWS (Part 2)
+
+1. Set your AWS credentials in GitHub Secrets:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+
+2. Push to `main` → GitHub Actions will:
+   - Build the JAR
+   - Build & push Docker image to ECR
+   - Apply Terraform (VPC, EKS, RDS)
+   - Deploy to Kubernetes
+
+To deploy manually:
+
+```bash
+cd terraform
+terraform init && terraform apply -auto-approve
+
+Then configure kubectl and apply:
+bash
+aws eks update-kubeconfig --region <your-region> --name <cluster-name>
+kubectl apply -f k8s/
+
+📁 Repository structure
+text
+
+.
+├── src/                 # Spring Boot application code
+├── Dockerfile           # Multi-stage Docker build
+├── terraform/           # AWS infrastructure (VPC, EKS, RDS, ECR)
+├── k8s/                 # Kubernetes manifests (Deployment, Service, etc.)
+├── .github/workflows/   # CI/CD pipeline
+└── pom.xml              # Maven dependencies
+
+✅ Features
+
+    CRUD REST API
+
+    Containerized with Docker
+
+    Kubernetes deployment with LoadBalancer
+
+    Terraform-managed AWS infrastructure
+
+    CI/CD via GitHub Actions
+
+    External PostgreSQL (RDS)
